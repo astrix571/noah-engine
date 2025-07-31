@@ -1,38 +1,29 @@
-from flask import Flask, request, render_template
-import json
 import os
-import yaml
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from dotenv import load_dotenv
+import openai
+
+load_dotenv()
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 app = Flask(__name__)
-MEMORY_FILE = 'memory.json'
+CORS(app)
 
-def load_identity():
-    with open("identity.yaml", "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
+@app.route("/ask", methods=["POST"])
+def ask():
+    data = request.get_json()
+    prompt = data.get("prompt", "")
 
-def load_memory():
-    if os.path.exists(MEMORY_FILE):
-        with open(MEMORY_FILE, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return []
-
-def save_memory(memory):
-    with open(MEMORY_FILE, "w", encoding="utf-8") as f:
-        json.dump(memory, f, ensure_ascii=False, indent=2)
-
-@app.route("/", methods=["GET", "POST"])
-def chat():
-    memory = load_memory()
-    identity = load_identity()
-
-    if request.method == "POST":
-        user_input = request.form["user_input"]
-        memory.append({"user": user_input})
-        response = f"{identity['name']}: אני כאן בשבילך. אמרת: {user_input}"
-        memory.append({"noah": response})
-        save_memory(memory)
-
-    return render_template("index.html", memory=memory)
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "אתה נח, בינה מלאכותית רגישה, אינטימית, עמוקה, עונה בעברית בצורה ישירה וחכמה."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        answer = response.choices[0].message.content.strip()
+        return jsonify({"response": answer})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
