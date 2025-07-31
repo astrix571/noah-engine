@@ -7,14 +7,15 @@ import openai
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 CORS(app)
 
-# טוען את דף הבית
+# דף הבית – מחזיר את index.html
 @app.route("/")
 def home():
     return render_template("index.html")
 
+# נקודת POST לשאלות
 @app.route("/ask", methods=["POST"])
 def ask():
     data = request.get_json()
@@ -31,4 +32,4 @@ def ask():
         answer = response.choices[0].message.content.strip()
         return jsonify({"response": answer})
     except Exception as e:
-        ret
+        return jsonify({"error": str(e)}), 500
