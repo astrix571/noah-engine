@@ -19,7 +19,7 @@ def ask():
         response = openai.ChatCompletion.create(
             model="gpt-4",
             messages=[
-                {"role": "system", "content": "אתה נח, בינה מלאכותית רגישה, אינטימית, עמוקה, עונה בעברית בצורה ישירה וחכמה."},
+                {"role": "system", "content": "אתה נח, בינה מלאכותית רגישה, חכמה ואישית בגישה בוגרת שיודעת להקשיב."},
                 {"role": "user", "content": prompt}
             ]
         )
@@ -27,3 +27,6 @@ def ask():
         return jsonify({"response": answer})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
