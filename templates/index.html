@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>נח - מנוע שיחה</title>
+</head>
+<body style="font-family: sans-serif; direction: rtl; padding: 30px;">
+    <h1>🧠 שוחח עם נח</h1>
+    <form method="post">
+        <input type="text" name="user_input" placeholder="מה בלבך?" style="width: 300px;" required>
+        <button type="submit">שלח</button>
+    </form>
+    <hr>
+    {% for line in memory %}
+        {% if line.user %}
+            <p><strong>אתה:</strong> {{ line.user }}</p>
+        {% elif line.noah %}
+            <p><strong>נח:</strong> {{ line.noah }}</p>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
