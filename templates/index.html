@@ -1,38 +1,39 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>שוחח עם נח</title>
-    <script>
-        async function sendMessage() {
-            const prompt = document.getElementById("prompt").value;
-            const responseBox = document.getElementById("response");
-            responseBox.innerHTML = "⏳ מחכה לתשובה...";
-
-            try {
-                const res = await fetch("/ask", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ prompt })
-                });
-                const data = await res.json();
-                if (data.response) {
-                    responseBox.innerHTML = `<strong>נח:</strong> ${data.response}`;
-                } else {
-                    responseBox.innerHTML = "⚠️ שגיאה: " + (data.error || "לא התקבלה תשובה");
-                }
-            } catch (error) {
-                responseBox.innerHTML = "❌ תקלה בתקשורת עם השרת";
-            }
-        }
-    </script>
+  <meta charset="UTF-8">
+  <title>נח - שיחה</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; direction: rtl; background: #f4f4f4; }
+    #prompt { width: 60%; padding: 10px; font-size: 16px; }
+    #sendBtn { padding: 10px 20px; font-size: 16px; }
+    #response { margin-top: 30px; padding: 20px; background: white; border-radius: 10px; }
+  </style>
 </head>
-<body style="font-family: sans-serif; direction: rtl; padding: 30px;">
-    <h1>🧠 דבר עם נח</h1>
-    <input id="prompt" type="text" placeholder="מה בלבך?" style="width: 300px;" />
-    <button onclick="sendMessage()">שלח</button>
-    <hr>
-    <div id="response"></div>
-</body>
-</html>
+<body>
+  <h1>🧠 דבר עם נח</h1>
+  <input type="text" id="prompt" placeholder="מה בלבך?">
+  <button id="sendBtn" onclick="sendMessage()">שלח</button>
 
+  <div id="response"></div>
+
+  <script>
+    async function sendMessage() {
+      const prompt = document.getElementById("prompt").value;
+      const responseBox = document.getElementById("response");
+      responseBox.innerHTML = "⌛ נח מקשיב...";
+
+      try {
+        const res = await fetch("/ask", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: prompt })
+        });
+
+        const data = await res.json();
+        if (data.response) {
+          responseBox.innerHTML = `<strong>נח:</strong> ${data.response}`;
+        } else {
+          responseBox.innerHTML = "❌ שגיאה: " + (data.error || "לא התקבלה תשובה");
+        }
+      } catch (err) {
