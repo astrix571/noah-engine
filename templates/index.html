@@ -2,21 +2,37 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>נח - מנוע שיחה</title>
+    <title>שוחח עם נח</title>
+    <script>
+        async function sendMessage() {
+            const prompt = document.getElementById("prompt").value;
+            const responseBox = document.getElementById("response");
+            responseBox.innerHTML = "⏳ מחכה לתשובה...";
+
+            try {
+                const res = await fetch("/ask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ prompt })
+                });
+                const data = await res.json();
+                if (data.response) {
+                    responseBox.innerHTML = `<strong>נח:</strong> ${data.response}`;
+                } else {
+                    responseBox.innerHTML = "⚠️ שגיאה: " + (data.error || "לא התקבלה תשובה");
+                }
+            } catch (error) {
+                responseBox.innerHTML = "❌ תקלה בתקשורת עם השרת";
+            }
+        }
+    </script>
 </head>
 <body style="font-family: sans-serif; direction: rtl; padding: 30px;">
-    <h1>🧠 שוחח עם נח</h1>
-    <form method="post">
-        <input type="text" name="user_input" placeholder="מה בלבך?" style="width: 300px;" required>
-        <button type="submit">שלח</button>
-    </form>
+    <h1>🧠 דבר עם נח</h1>
+    <input id="prompt" type="text" placeholder="מה בלבך?" style="width: 300px;" />
+    <button onclick="sendMessage()">שלח</button>
     <hr>
-    {% for line in memory %}
-        {% if line.user %}
-            <p><strong>אתה:</strong> {{ line.user }}</p>
-        {% elif line.noah %}
-            <p><strong>נח:</strong> {{ line.noah }}</p>
-        {% endif %}
-    {% endfor %}
+    <div id="response"></div>
 </body>
 </html>
+
