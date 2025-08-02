@@ -1,39 +1,15 @@
-<!DOCTYPE html>
-<html lang="he" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <title>נח - שיחה</title>
-  <style>
-    body { font-family: sans-serif; padding: 40px; direction: rtl; background: #f4f4f4; }
-    #prompt { width: 60%; padding: 10px; font-size: 16px; }
-    #sendBtn { padding: 10px 20px; font-size: 16px; }
-    #response { margin-top: 30px; padding: 20px; background: white; border-radius: 10px; }
-  </style>
-</head>
-<body>
-  <h1>🧠 דבר עם נח</h1>
-  <input type="text" id="prompt" placeholder="מה בלבך?">
-  <button id="sendBtn" onclick="sendMessage()">שלח</button>
-
-  <div id="response"></div>
-
-  <script>
-    async function sendMessage() {
-      const prompt = document.getElementById("prompt").value;
-      const responseBox = document.getElementById("response");
-      responseBox.innerHTML = "⌛ נח מקשיב...";
-
-      try {
-        const res = await fetch("/ask", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: prompt })
-        });
-
-        const data = await res.json();
-        if (data.response) {
-          responseBox.innerHTML = `<strong>נח:</strong> ${data.response}`;
-        } else {
-          responseBox.innerHTML = "❌ שגיאה: " + (data.error || "לא התקבלה תשובה");
-        }
-      } catch (err) {
+<!doctype html>
+<html lang="he">
+  <head><meta charset="utf-8"><title>Noah Engine</title></head>
+  <body style="font-family:system-ui">
+    <h1>Noah Engine</h1>
+    <p>רץ. בריאות.</p>
+    <ul>
+      <li>GET <code>/memory/list</code></li>
+      <li>POST <code>/memory/add</code> — body: {"key":"name","value":"Noah"}</li>
+      <li>GET <code>/memory/get?key=name</code></li>
+      <li>DELETE <code>/memory/delete</code> — body: {"key":"name"}</li>
+      <li><a href="/privacy">/privacy</a></li>
+    </ul>
+  </body>
+</html>
