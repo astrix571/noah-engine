@@ -1,0 +1,179 @@
+
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Noah Memory – Privacy Policy</title>
+  <style>
+    :root { --bg:#0f172a; --fg:#e5e7eb; --muted:#94a3b8; --card:#111827; --accent:#22d3ee; }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--fg); font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 48px; }
+    header { display:flex; align-items:center; gap:14px; margin-bottom:24px; }
+    header .logo { width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg, #22d3ee, #3b82f6); }
+    h1 { font-size: 1.8rem; margin: 0; }
+    .card { background: var(--card); border: 1px solid #1f2937; border-radius: 16px; padding: 22px; margin: 14px 0; }
+    h2 { font-size: 1.15rem; margin-top:10px; }
+    p, li { line-height: 1.6; color: var(--fg); }
+    .muted { color: var(--muted); }
+    code { background:#0b1220; padding:2px 6px; border-radius:6px; }
+    .lang-switch { display:flex; gap:10px; margin: 10px 0 24px; }
+    .btn { border:1px solid #334155; background:#0b1220; color:var(--fg); padding:8px 12px; border-radius:10px; cursor:pointer; }
+    .btn:hover { border-color:#475569; }
+    footer { margin-top: 26px; font-size: .9rem; color: var(--muted); }
+    .en { direction:ltr; }
+    .hidden { display:none; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo" aria-hidden="true"></div>
+      <h1>Noah Memory – Privacy Policy</h1>
+    </header>
+
+    <div class="lang-switch">
+      <button class="btn" onclick="showLang('he')">עברית</button>
+      <button class="btn" onclick="showLang('en')">English</button>
+    </div>
+
+    <!-- Hebrew -->
+    <section id="he" class="he">
+      <div class="card">
+        <h2>תמצית</h2>
+        <p>Noah Memory API שומר ומעבד מידע אך ורק לפי בקשת המשתמש ולצרכי תפקוד ה־Custom GPT <strong>Noah – Presence &amp; Insight</strong>. איננו מוכרים מידע ואיננו משתפים צד ג' ללא הוראה מפורשת של המשתמש.</p>
+      </div>
+
+      <div class="card">
+        <h2>איזה מידע נשמר</h2>
+        <ul>
+          <li>תכנים שהמשתמש מבקש לשמור במפורש (למשל: הערות, פרטים תפעוליים, פרופיל עבודה).</li>
+          <li>מטא־נתונים טכניים לצורך אבטחה וניטור תקין של השירות (למשל: חותמת זמן, מזהה בקשה).</li>
+        </ul>
+        <p class="muted">אין איסוף של מידע רגיש (בריאות, דת, פוליטיקה וכו') אלא אם המשתמש מבקש ושומר זאת במפורש.</p>
+      </div>
+
+      <div class="card">
+        <h2>מטרות השימוש</h2>
+        <ul>
+          <li>שליפה הקשרית של זיכרון לשיפור החוויה והשיחה.</li>
+          <li>שימור העדפות עבודה (למשל: סגנון כתיבה/שפה).</li>
+          <li>אבטחה ותפעול השירות.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>שיתוף מידע</h2>
+        <p>אין שיתוף מידע עם צד ג' אלא אם המשתמש מבקש זאת במפורש או אם הדבר נדרש לפי חוק.</p>
+      </div>
+
+      <div class="card">
+        <h2>משך שמירה ומחיקה</h2>
+        <ul>
+          <li>ברירת מחדל: שמירה עד בקשת מחיקה.</li>
+          <li>מחיקה: ניתן לבקש <em>ממחיקת זיכרון נקודתית</em> ועד <em>מחיקה מלאה</em> דרך הפקודות/הממשק.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>אבטחה</h2>
+        <ul>
+          <li>גישה מאובטחת ל־API באמצעות מפתח גישה (API Key).</li>
+          <li>הפרדת סביבות פיתוח/בדיקות/ייצור כאשר רלוונטי.</li>
+          <li>לוגים מצומצמים וללא תוכן אישי, לצורך תפעול בלבד.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>זכויות משתמש</h2>
+        <ul>
+          <li>עיון במידע שנשמר לגביך (באמצעות <code>listMemory</code>).</li>
+          <li>הוספה/עדכון/מחיקה של פריטים (באמצעות <code>addMemory</code> ופקודות נלוות).</li>
+          <li>פנייה אלינו בכל שאלה/בקשה.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>יצירת קשר</h2>
+        <p>לשאלות ובקשות: <a href="mailto:contact@example.com">contact@example.com</a>. ניתן לעדכן לכתובת מועדפת.</p>
+      </div>
+    </section>
+
+    <!-- English -->
+    <section id="en" class="en hidden">
+      <div class="card">
+        <h2>Summary</h2>
+        <p>Noah Memory API stores and processes information strictly at the user's request and solely to operate the Custom GPT <strong>Noah – Presence &amp; Insight</strong>. We do not sell data and do not share it with third parties without explicit user direction.</p>
+      </div>
+
+      <div class="card">
+        <h2>Data We Store</h2>
+        <ul>
+          <li>Content the user explicitly asks to store (e.g., notes, operational details, work profile).</li>
+          <li>Limited technical metadata for security and service integrity (e.g., timestamp, request id).</li>
+        </ul>
+        <p class="muted">We do not collect sensitive categories (health, religion, politics, etc.) unless the user explicitly asks to store such content.</p>
+      </div>
+
+      <div class="card">
+        <h2>Purpose of Use</h2>
+        <ul>
+          <li>Contextual memory retrieval to improve the experience and dialogue.</li>
+          <li>Persisting work preferences (e.g., style/language).</li>
+          <li>Service security and operations.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Sharing</h2>
+        <p>No data is shared with third parties unless explicitly requested by the user or required by law.</p>
+      </div>
+
+      <div class="card">
+        <h2>Retention & Deletion</h2>
+        <ul>
+          <li>Default: retained until deletion is requested.</li>
+          <li>Deletion: from <em>single-item erase</em> up to <em>full wipe</em> via commands/UI.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Security</h2>
+        <ul>
+          <li>API access via API Key.</li>
+          <li>Environment separation (dev/test/prod) where applicable.</li>
+          <li>Minimal logs without personal content, for ops only.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>User Rights</h2>
+        <ul>
+          <li>View your stored data (via <code>listMemory</code>).</li>
+          <li>Add/Update/Delete items (via <code>addMemory</code> and related endpoints).</li>
+          <li>Contact us with any request.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>Contact</h2>
+        <p>Questions & requests: <a href="mailto:contact@example.com">contact@example.com</a>. Replace with your preferred address.</p>
+      </div>
+    </section>
+
+    <footer class="muted">
+      © <span id="year"></span> Noah Memory. All rights reserved.
+    </footer>
+  </div>
+
+  <script>
+    function showLang(lang) {
+      document.getElementById('he').classList.toggle('hidden', lang !== 'he');
+      document.getElementById('en').classList.toggle('hidden', lang !== 'en');
+    }
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
