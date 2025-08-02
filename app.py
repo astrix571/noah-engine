@@ -14,6 +14,11 @@ CORS(app)
 def home():
     return render_template("index.html")
 
+# --- Privacy Policy (serves ./static/privacy.html) ---
+@app.route("/privacy")
+def privacy():
+    return app.send_static_file("privacy.html")
+
 @app.route("/ask", methods=["POST"])
 def ask():
     data = request.get_json()
@@ -35,4 +40,3 @@ def ask():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
