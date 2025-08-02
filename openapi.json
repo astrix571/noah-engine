@@ -1,24 +1,23 @@
 {
   "openapi": "3.1.0",
-  "info": { "title": "Noah Memory API", "version": "1.0.0" },
+  "info": { "title": "Noah Memory API", "version": "1.0.1" },
   "servers": [{ "url": "https://noah-engine.onrender.com" }],
   "paths": {
     "/memory/add": {
       "post": {
         "operationId": "addMemory",
         "summary": "Add or update a memory key/value",
-        "parameters": [
-          { "name": "key", "in": "query", "required": true, "schema": { "type": "string" } },
-          { "name": "value", "in": "query", "required": true, "schema": { "type": "string" } }
-        ],
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/AddMemoryRequest" } }
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/AddMemoryRequest" },
+              "example": { "key": "voice", "value": "deep male Hebrew" }
+            }
           }
         },
         "responses": {
-          "200": { "description": "Added or updated", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/StatusResponse" } } } },
+          "200": { "description": "Added/updated", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/StatusResponse" } } } },
           "400": { "description": "Bad request", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } },
           "403": { "description": "Forbidden", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } } }
         },
@@ -54,14 +53,14 @@
     "/memory/delete": {
       "delete": {
         "operationId": "deleteMemory",
-        "summary": "Delete item by key",
-        "parameters": [
-          { "name": "key", "in": "query", "required": false, "schema": { "type": "string" } }
-        ],
+        "summary": "Delete an item by key",
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/DeleteMemoryRequest" } }
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DeleteMemoryRequest" },
+              "example": { "key": "voice" }
+            }
           }
         },
         "responses": {
