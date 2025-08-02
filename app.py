@@ -40,9 +40,10 @@ def privacy():
 
 @app.route("/memory/list", methods=["GET"])
 def memory_list():
-    try:
-        data = load_store()
-        return jsonify({"status": "ok", "data": data}), 200
+    # בדיקה: מחזיר תוכן קבוע. אם זה עובד – הבעיה באחסון/קובץ.
+    from flask import jsonify
+    return jsonify({"status": "ok", "data": []}), 200
+
     except Exception as e:
         LOG.exception("memory_list failed")
         return jsonify({"status": "error", "error": str(e)}), 500
