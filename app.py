@@ -1,13 +1,15 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
+from flask_cors import CORS
 import os, json, logging
 
-# --- App setup ---
+# ── App ────────────────────────────────────────────────────────────────────────
 app = Flask(__name__)
+CORS(app)
 logging.basicConfig(level=logging.INFO)
-LOG = logging.getLogger("noah-engine")
+log = logging.getLogger("noah-engine")
 
-# --- Storage helpers ---
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+# ── Storage ───────────────────────────────────────────────────────────────────
+DATA_DIR  = os.path.join(os.path.dirname(__file__), "data")
 DATA_FILE = os.path.join(DATA_DIR, "memory.json")
 
 def ensure_store():
@@ -17,55 +19,69 @@ def ensure_store():
             json.dump([], f)
 
 def load_store():
+    """Always return a list of {'key','value'} objects."""
     ensure_store()
     try:
         with open(DATA_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
-        # נרמול: תמיד נחזיק list של אובייקטים {key,value}
-        if isinstance(data, dict):
-            data = [{"key": k, "value": v} for k, v in data.items()]
-        if not isinstance(data, list):
-            data = []
-        # סינון עדין אם יש לכלוך
-        clean = []
-        for x in data:
-            if isinstance(x, dict) and "key" in x and "value" in x:
-                clean.append({"key": x["key"], "value": x["value"]})
-        return clean
     except Exception:
-        LOG.exception("load_store failed; returning empty list")
-        return []
+        log.exception("load_store: failed to read/parse, resetting file")
+        data = []
+        save_store(data)
+
+    # normalize
+    if isinstance(data, dict):
+        data = [{"key": k, "value": v} for k, v in data.items()]
+    elif not isinstance(data, list):
+        data = []
+
+    clean = []
+    for x in data:
+        if isinstance(x, dict) and "key" in x and "value" in x:
+            clean.append({"key": str(x["key"]), "value": str(x["value"])})
+    return clean
 
 def save_store(items):
+    """items must be list[{'key','value'}]."""
     ensure_store()
-    # items צפוי להיות list של {key,value}
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(items, f, ensure_ascii=False, indent=2)
 
-# --- Health & privacy ---
-@app.route("/", methods=["GET"])
-def root():
-    return "Noah Engine is up", 200
+# ── Views ─────────────────────────────────────────────────────────────────────
+@app.get("/")
+def home():
+    html = """<!doctype html>
+<html><head><meta charset="utf-8"><title>Noah Engine</title></head>
+<body style="font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:2rem;">
+<h1>Noah Engine</h1>
+<p>רץ. בריאות.</p>
+<ul>
+  <li>GET <code>/memory/list</code></li>
+  <li>POST <code>/memory/add</code> — body: <code>{"key":"name","value":"Noah"}</code></li>
+  <li>GET <code>/memory/get?key=name</code></li>
+  <li>DELETE <code>/memory/delete</code> — body: <code>{"key":"name"}</code></li>
+  <li><a href="/privacy">/privacy</a></li>
+</ul>
+</body></html>"""
+    return Response(html, mimetype="text/html")
 
-@app.route("/privacy", methods=["GET"])
+@app.get("/privacy")
 def privacy():
     return (
-        "Noah Engine Privacy: stores simple key/value memory in a local JSON file on the server. "
-        "No third-party sharing.",
+        "Noah Engine Privacy: we store simple key/value memory in a local JSON file (data/memory.json) on the server. No third-party sharing.",
         200,
     )
 
-# --- Memory API ---
-@app.route("/memory/list", methods=["GET"])
+@app.get("/memory/list")
 def memory_list():
     try:
         data = load_store()
         return jsonify({"status": "ok", "data": data}), 200
     except Exception as e:
-        LOG.exception("memory_list failed")
+        log.exception("memory_list failed")
         return jsonify({"status": "error", "error": str(e)}), 500
 
-@app.route("/memory/add", methods=["POST"])
+@app.post("/memory/add")
 def memory_add():
     try:
         body = request.get_json(force=True, silent=False)
@@ -76,22 +92,20 @@ def memory_add():
 
         data = load_store()
         # upsert
-        replaced = False
         for item in data:
-            if item.get("key") == key:
-                item["value"] = value
-                replaced = True
+            if item["key"] == str(key):
+                item["value"] = str(value)
                 break
-        if not replaced:
-            data.append({"key": key, "value": value})
+        else:
+            data.append({"key": str(key), "value": str(value)})
 
         save_store(data)
         return jsonify({"status": "ok"}), 200
     except Exception as e:
-        LOG.exception("memory_add failed")
+        log.exception("memory_add failed")
         return jsonify({"status": "error", "error": str(e)}), 500
 
-@app.route("/memory/get", methods=["GET"])
+@app.get("/memory/get")
 def memory_get():
     try:
         key = request.args.get("key")
@@ -99,14 +113,14 @@ def memory_get():
             return jsonify({"status": "error", "error": "key is required"}), 400
         data = load_store()
         for item in data:
-            if item.get("key") == key:
+            if item["key"] == str(key):
                 return jsonify({"status": "ok", "item": item}), 200
         return jsonify({"status": "ok", "item": None}), 200
     except Exception as e:
-        LOG.exception("memory_get failed")
+        log.exception("memory_get failed")
         return jsonify({"status": "error", "error": str(e)}), 500
 
-@app.route("/memory/delete", methods=["DELETE"])
+@app.delete("/memory/delete")
 def memory_delete():
     try:
         body = request.get_json(force=True, silent=False)
@@ -114,11 +128,13 @@ def memory_delete():
         if not key:
             return jsonify({"status": "error", "error": "key is required"}), 400
         data = load_store()
-        data = [x for x in data if x.get("key") != key]
-        save_store(data)
+        new_data = [x for x in data if x["key"] != str(key)]
+        save_store(new_data)
         return jsonify({"status": "ok"}), 200
     except Exception as e:
-        LOG.exception("memory_delete failed")
+        log.exception("memory_delete failed")
         return jsonify({"status": "error", "error": str(e)}), 500
 
-# חשוב: אין app.run() — Render מריץ דרך gunicorn, ומייבא את המשתנה "app".
+# ── Local run (Render יכול גם להריץ gunicorn app:app) ─────────────────────────
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
